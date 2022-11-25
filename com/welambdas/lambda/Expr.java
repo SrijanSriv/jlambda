@@ -3,7 +3,7 @@ package com.welambdas.lambda;
 
 abstract class Expr {
   interface Visitor<R> {
-    // R visitAssignExpr(Assign expr);
+    R visitAssignExpr(Assign expr);
     R visitBinaryExpr(Binary expr);
     // R visitCallExpr(Call expr);
     // R visitGetExpr(Get expr);
@@ -14,25 +14,25 @@ abstract class Expr {
     // R visitSuperExpr(Super expr);
     // R visitThisExpr(This expr);
     R visitUnaryExpr(Unary expr);
-    // R visitVariableExpr(Variable expr);
+    R visitVariableExpr(Variable expr);
 }
 
   // Nested Expr classes here...
 //> expr-assign
-//   static class Assign extends Expr {
-//     Assign(Token name, Expr value) {
-//       this.name = name;
-//       this.value = value;
-//     }
+  static class Assign extends Expr {
+    Assign(Token name, Expr value) {
+      this.name = name;
+      this.value = value;
+    }
 
-//     @Override
-//     <R> R accept(Visitor<R> visitor) {
-//       return visitor.visitAssignExpr(this);
-//     }
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitAssignExpr(this);
+    }
 
-//     final Token name;
-//     final Expr value;
-//   }
+    final Token name;
+    final Expr value;
+  }
 //< expr-assign
 //> expr-binary
   static class Binary extends Expr {
@@ -196,19 +196,19 @@ abstract class Expr {
     final Expr right;
 }
 //< expr-unary
-//> expr-variable
-//   static class Variable extends Expr {
-//     Variable(Token name) {
-//       this.name = name;
-//     }
+// > expr-variable
+  static class Variable extends Expr {
+    Variable(Token name) {
+      this.name = name;
+    }
 
-//     @Override
-//     <R> R accept(Visitor<R> visitor) {
-//       return visitor.visitVariableExpr(this);
-//     }
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitVariableExpr(this);
+    }
 
-//     final Token name;
-//   }
+    final Token name;
+  }
 //< expr-variable
 
   abstract <R> R accept(Visitor<R> visitor);
