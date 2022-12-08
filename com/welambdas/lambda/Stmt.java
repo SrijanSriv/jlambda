@@ -1,32 +1,34 @@
 package com.welambdas.lambda;
 
+import java.util.List;
+
 abstract class Stmt {
   interface Visitor<R> {
-    // R visitBlockStmt(Block stmt);
+    R visitBlockStmt(Block stmt);
     // R visitClassStmt(Class stmt);
     R visitExpressionStmt(Expression stmt);
     // R visitFunctionStmt(Function stmt);
-    // R visitIfStmt(If stmt);
+    R visitIfStmt(If stmt);
     R visitPrintStmt(Print stmt);
     // R visitReturnStmt(Return stmt);
     R visitVarStmt(Var stmt);
-    // R visitWhileStmt(While stmt);
+    R visitWhileStmt(While stmt);
   }
 
   // Nested Stmt classes here...
 //> stmt-block
-  // static class Block extends Stmt {
-  //   Block(List<Stmt> statements) {
-  //     this.statements = statements;
-  //   }
+  static class Block extends Stmt {
+    Block(List<Stmt> statements) {
+      this.statements = statements;
+    }
 
-  //   @Override
-  //   <R> R accept(Visitor<R> visitor) {
-  //     return visitor.visitBlockStmt(this);
-  //   }
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitBlockStmt(this);
+    }
 
-  //   final List<Stmt> statements;
-  // }
+    final List<Stmt> statements;
+  }
 //< stmt-block
 //> stmt-class
   // static class Class extends Stmt {
@@ -81,22 +83,22 @@ abstract class Stmt {
   // }
 //< stmt-function
 //> stmt-if
-  // static class If extends Stmt {
-  //   If(Expr condition, Stmt thenBranch, Stmt elseBranch) {
-  //     this.condition = condition;
-  //     this.thenBranch = thenBranch;
-  //     this.elseBranch = elseBranch;
-  //   }
+  static class If extends Stmt {
+    If(Expr condition, Stmt thenBranch, Stmt elseBranch) {
+      this.condition = condition;
+      this.thenBranch = thenBranch;
+      this.elseBranch = elseBranch;
+    }
 
-  //   @Override
-  //   <R> R accept(Visitor<R> visitor) {
-  //     return visitor.visitIfStmt(this);
-  //   }
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitIfStmt(this);
+    }
 
-  //   final Expr condition;
-  //   final Stmt thenBranch;
-  //   final Stmt elseBranch;
-  // }
+    final Expr condition;
+    final Stmt thenBranch;
+    final Stmt elseBranch;
+  }
 //< stmt-if
 //> stmt-print
   static class Print extends Stmt {
@@ -145,21 +147,25 @@ abstract class Stmt {
   }
 //< stmt-var
 //> stmt-while
-  // static class While extends Stmt {
-  //   While(Expr condition, Stmt body) {
-  //     this.condition = condition;
-  //     this.body = body;
-  //   }
+  static class While extends Stmt {
+    While(Expr condition, Stmt body) {
+      this.condition = condition;
+      this.body = body;
+    }
 
-  //   @Override
-  //   <R> R accept(Visitor<R> visitor) {
-  //     return visitor.visitWhileStmt(this);
-  //   }
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitWhileStmt(this);
+    }
 
-  //   final Expr condition;
-  //   final Stmt body;
-  // }
+    final Expr condition;
+    final Stmt body;
+  }
 //< stmt-while
 
   abstract <R> R accept(Visitor<R> visitor);
+
+  public Object accept(AstPrinter astPrinter) {
+      return null;
+  }
 }

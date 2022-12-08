@@ -1,5 +1,7 @@
 package com.welambdas.lambda;
 
+import java.util.List;
+
 class AstPrinter implements Expr.Visitor<String> {
     //> print method
     String print(Expr expr) {
@@ -24,8 +26,23 @@ class AstPrinter implements Expr.Visitor<String> {
     }
 
     @Override
+    public String visitAssignExpr(Expr.Assign expr) {
+        return parenthesize2("=", expr.name.lexeme, expr.value);
+    }
+
+    @Override
+    public String visitLogicalExpr(Expr.Logical expr) {
+        return parenthesize(expr.operator.lexeme, expr.left, expr.right);
+    }
+
+    @Override
     public String visitUnaryExpr(Expr.Unary expr) {
         return parenthesize(expr.operator.lexeme, expr.right);
+    }
+
+    @Override
+    public String visitVariableExpr(Expr.Variable expr) {
+        return expr.name.lexeme;
     }
 
     private String parenthesize(String name, Expr... exprs) {
@@ -40,5 +57,34 @@ class AstPrinter implements Expr.Visitor<String> {
 
         return builder.toString();
     }
+
+    private String parenthesize2(String name, Object... parts) {
+        StringBuilder builder = new StringBuilder();
+    
+        builder.append("(").append(name);
+        transform(builder, parts);
+        builder.append(")");
+    
+        return builder.toString();
+      }
+    
+      private void transform(StringBuilder builder, Object... parts) {
+        for (Object part : parts) {
+          builder.append(" ");
+          if (part instanceof Expr) {
+            builder.append(((Expr)part).accept(this));
+    //> Statements and State omit
+          } else if (part instanceof Stmt) {
+            builder.append(((Stmt) part).accept(this));
+    //< Statements and State omit
+          } else if (part instanceof Token) {
+            builder.append(((Token) part).lexeme);
+          } else if (part instanceof List) {
+            transform(builder, ((List) part).toArray());
+          } else {
+            builder.append(part);
+          }
+        }
+      }
     //> visit methods
 }
