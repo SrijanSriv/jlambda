@@ -1,11 +1,13 @@
 package com.welambdas.lambda;
 
+import java.util.List;
+
 
 abstract class Expr {
   interface Visitor<R> {
     R visitAssignExpr(Assign expr);
     R visitBinaryExpr(Binary expr);
-    // R visitCallExpr(Call expr);
+    R visitCallExpr(Call expr);
     // R visitGetExpr(Get expr);
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
@@ -53,22 +55,22 @@ abstract class Expr {
 }
 //< expr-binary
 //> expr-call
-//   static class Call extends Expr {
-//     Call(Expr callee, Token paren, List<Expr> arguments) {
-//       this.callee = callee;
-//       this.paren = paren;
-//       this.arguments = arguments;
-//     }
+  static class Call extends Expr {
+    Call(Expr callee, Token paren, List<Expr> arguments) {
+      this.callee = callee;
+      this.paren = paren;
+      this.arguments = arguments;
+    }
 
-//     @Override
-//     <R> R accept(Visitor<R> visitor) {
-//       return visitor.visitCallExpr(this);
-//     }
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitCallExpr(this);
+    }
 
-//     final Expr callee;
-//     final Token paren;
-//     final List<Expr> arguments;
-//   }
+    final Expr callee;
+    final Token paren;
+    final List<Expr> arguments;
+  }
 //< expr-call
 //> expr-get
 //   static class Get extends Expr {

@@ -9,18 +9,18 @@ The origin of the Lambda Programming Language. Build using Java for experimentat
 #### Hello world
 
 ```jlambda
-// Your very first lox program.
+// The famous hello world
 print "Hello, lambdas!";
 ```
 
 #### Variable declaration
 
 ```jlambda
-var a = 5;
+var a = 300;
 var b = 6;
 
 var c = a + b;
-print c; // prints 11
+print c; // prints 306
 ```
 
 #### Loops
@@ -46,5 +46,13 @@ if (a >= 4) {
   print "a is greater than or equal to 4";
 } else {
   print "a is less than 4";
+}
+```
+
+#### Functions
+
+``` jlambda
+fun printSum(a, b) {
+  print a + b;
 }
 ```
