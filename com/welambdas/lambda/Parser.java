@@ -41,6 +41,7 @@ public class Parser {
   }
 
   private Stmt statement() {
+    if (match(RETURN)) return returnStatement();
     if (match(IF)) return ifStatement();
     if (match(WHILE)) return whileStatement();
     if (match(FOR)) return forStatement();
@@ -48,6 +49,17 @@ public class Parser {
     if (match(LEFT_BRACE)) return new Stmt.Block(block());
   
     return expressionStatement();
+  }
+
+  private Stmt returnStatement() {
+    Token keyword = previous();
+    Expr value = null;
+    if (!check(SEMICOLON)) {
+      value = expression();
+    }
+
+    consume(SEMICOLON, "Expect ';' after return value.");
+    return new Stmt.Return(keyword, value);
   }
 
   private Stmt forStatement() {
@@ -283,6 +295,8 @@ public class Parser {
           case PRINT:
           case RETURN:
             return;
+          default:
+            break;
         }
   
         advance();
@@ -316,7 +330,7 @@ public class Parser {
   private Expr factor() {
     Expr expr = unary();
 
-    while (match(SLASH, STAR)) {
+    while (match(SLASH, STAR, MODULO)) {
       Token operator = previous();
       Expr right = unary();
       expr = new Expr.Binary(expr, operator, right);
@@ -326,7 +340,7 @@ public class Parser {
   }
 
   private Expr unary() {
-    if (match(BANG, MINUS)) {
+    if (match(BANG, MINUS, PLUS_PLUS, MINUS_MINUS)) {
       Token operator = previous();
       Expr right = unary();
       return new Expr.Unary(operator, right);

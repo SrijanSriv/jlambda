@@ -54,9 +54,17 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
       return !isTruthy(right);
       case MINUS:
         return -(double)right;
+      case PLUS_PLUS:
+        if (right instanceof Double && (Double)right % 1 == 0) return (Double)right + 1;
+        throw new RuntimeError(expr.operator, "Variable not an Integer: " + right);
+      case MINUS_MINUS:
+      if (right instanceof Double && (Double)right % 1 == 0) return (Double)right - 1;
+        throw new RuntimeError(expr.operator, "Variable not an Integer: " + right);
+      default:
+        return null;
     }
     // Unreachable.
-    return null;
+    // return null;
   }
 
   @Override
@@ -146,7 +154,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
   @Override
   public Void visitFunctionStmt(Stmt.Function stmt) {
-    LambdaFunction function = new LambdaFunction(stmt);
+    LambdaFunction function = new LambdaFunction(stmt, environment);
     environment.define(stmt.name.lexeme, function);
     return null;
   }
@@ -166,6 +174,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     Object value = evaluate(stmt.expression);
     System.out.println(stringify(value));
     return null;
+  }
+
+  @Override
+  public Void visitReturnStmt(Stmt.Return stmt) {
+    Object value = null;
+    if (stmt.value != null) value = evaluate(stmt.value);
+
+    throw new Return(value);
   }
 
   @Override
@@ -197,7 +213,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   @Override
   public Object visitBinaryExpr(Expr.Binary expr) {
     Object left = evaluate(expr.left);
-    Object right = evaluate(expr.right); 
+    Object right = evaluate(expr.right);
 
     switch (expr.operator.type) {
       case BANG_EQUAL:
@@ -234,9 +250,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
       case STAR:
           checkNumberOperands(expr.operator, left, right);
           return (double)left * (double)right;
+      case MODULO:
+          checkNumberOperands(expr.operator, left, right);
+          return (double)left % (double)right;
+      default:
+          return null;
     }
   // Unreachable.
-    return null;
+    // return null;
   }
 
   @Override

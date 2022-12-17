@@ -2,6 +2,8 @@ package com.welambdas.lambda;
 
 import java.util.List;
 
+import com.welambdas.lambda.Expr.Call;
+
 class AstPrinter implements Expr.Visitor<String> {
     //> print method
     String print(Expr expr) {
@@ -80,11 +82,15 @@ class AstPrinter implements Expr.Visitor<String> {
           } else if (part instanceof Token) {
             builder.append(((Token) part).lexeme);
           } else if (part instanceof List) {
-            transform(builder, ((List) part).toArray());
+            transform(builder, ((List<?>) part).toArray());
           } else {
             builder.append(part);
           }
         }
       }
     //> visit methods
+      @Override
+      public String visitCallExpr(Call expr) {
+        return null;
+      }
 }

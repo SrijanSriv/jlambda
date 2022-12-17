@@ -64,15 +64,15 @@ class Scanner {
       case '}': addToken(RIGHT_BRACE); break;
       case ',': addToken(COMMA); break;
       case '.': addToken(DOT); break;
+      case '%': addToken(MODULO); break;
+      case ';': addToken(SEMICOLON); break;
+      case '*': addToken(STAR); break;
       case '-':
         addToken(match('-') ? MINUS_MINUS : MINUS);
         break;
       case '+':
         addToken(match('+') ? PLUS_PLUS : PLUS);
         break;
-      case ';': addToken(SEMICOLON); break;
-      case '*': addToken(STAR); break; // [slash]
-//> two-char-tokens
       case '!':
         addToken(match('=') ? BANG_EQUAL : BANG);
         break;
@@ -85,7 +85,6 @@ class Scanner {
       case '>':
         addToken(match('=') ? GREATER_EQUAL : GREATER);
         break;
-//< two-char-tokens
 //> slash
       case '/':
         if (match('/')) {
@@ -115,9 +114,7 @@ class Scanner {
 //> char-error
 
       default:
-/* Scanning char-error < Scanning digit-start
-        Lambda.error(line, "Unexpected character.");
-*/
+        // Lambda.error(line, "Unexpected character.");
 //> digit-start
         if (isDigit(c)) {
             number();
