@@ -340,7 +340,7 @@ public class Parser {
   }
 
   private Expr unary() {
-    if (match(BANG, MINUS, PLUS_PLUS, MINUS_MINUS)) {
+    if (match(BANG, MINUS)) {
       Token operator = previous();
       Expr right = unary();
       return new Expr.Unary(operator, right);
