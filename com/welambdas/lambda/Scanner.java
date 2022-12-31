@@ -1,5 +1,8 @@
 package com.welambdas.lambda;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +34,7 @@ class Scanner {
     keywords.put("true",   TRUE);
     keywords.put("var",    VAR);
     keywords.put("while",  WHILE);
+    keywords.put("#>",  INCLUDE);
   }
 //< keyword-map
   private final String source;
@@ -60,6 +64,9 @@ class Scanner {
   private void scanToken() {
     char c = advance();
     switch (c) {
+      case '#':
+        fileIncluder(match('>') ? INCLUDE : IDENTIFIER);
+        break;
       case '(': addToken(LEFT_PAREN); break;
       case ')': addToken(RIGHT_PAREN); break;
       case '{': addToken(LEFT_BRACE); break;
@@ -133,13 +140,30 @@ class Scanner {
     }
   }
 //< scan-token
+//> libraryIncluder
+private void fileIncluder(TokenType type) {
+  if (type == IDENTIFIER) {
+    Lambda.error(line, "Hash usecase: to include files only");
+    return;
+  }
+  List<Token> importedTokens = new ArrayList<Token>();
+  while (isAlphaNumeric(peek())) advance();
+  String text = source.substring(start + 2, current);
+  String importLib = "tokens\\" + text + ".sre";
+  try {
+    importedTokens = readLib(importLib);
+  } catch (IOException e) {
+    Lambda.error(null, text + ": not a tokenized library");
+  }
+  for (Token token : importedTokens) {
+    // System.out.println(token);
+    addToken(token.type, token.literal, token.lexeme);
+  }
+}
+//< libraryIncluder
 //> identifier
   private void identifier() {
     while (isAlphaNumeric(peek())) advance();
-
-/* Scanning identifier < Scanning keyword-type
-    addToken(IDENTIFIER);
-*/
 //> keyword-type
     String text = source.substring(start, current);
     TokenType type = keywords.get(text);
@@ -160,8 +184,7 @@ class Scanner {
       while (isDigit(peek())) advance();
     }
 
-    addToken(NUMBER,
-        Double.parseDouble(source.substring(start, current)));
+    addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
   }
 //< number
 //> string
@@ -239,5 +262,22 @@ class Scanner {
     String text = source.substring(start, current);
     tokens.add(new Token(type, text, literal, line));
   }
+  private void addToken(TokenType type, Object literal, String lexeme) {
+    tokens.add(new Token(type, lexeme, literal, line));
+  }
 //< advance-and-add-token
+  private static List<Token> readLib(String fileName) throws IOException {
+    List<Token> obtain = new ArrayList<Token>();
+    FileInputStream fin = new FileInputStream (fileName);
+    ObjectInputStream ois = new ObjectInputStream(fin);
+    try {
+      obtain = (ArrayList<Token>)ois.readObject();
+    } catch (ClassNotFoundException e) {
+      Lambda.error(null, "object not the form of token class.");
+    }
+    int lasttoken_index = obtain.size() - 1; // to remove the EOF
+    obtain.remove(lasttoken_index);
+    fin.close();
+    return obtain;
+  }
 }

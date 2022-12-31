@@ -5,10 +5,17 @@ import java.util.List;
 class LambdaFunction implements LambdaCallable {
     private final Stmt.Function declaration;
     private final Environment closure;
+    private final boolean isInitializer;
 
-    LambdaFunction(Stmt.Function declaration, Environment closure) {
+    LambdaFunction(Stmt.Function declaration, Environment closure, boolean Initializer) {
       this.declaration = declaration;
       this.closure = closure;
+      this.isInitializer = Initializer;
+    }
+    LambdaFunction bind(LambdaInstance instance) {
+      Environment environment = new Environment(closure);
+      environment.define("this", instance);
+      return new LambdaFunction(declaration, environment, isInitializer);
     }
 
     @Override
@@ -32,8 +39,10 @@ class LambdaFunction implements LambdaCallable {
         try {
             interpreter.executeBlock(declaration.body, environment);
           } catch (Return returnValue) {
+            if (isInitializer) return closure.getAt(0, "this");
             return returnValue.value;
           }
+          if (isInitializer) return closure.getAt(0, "this");
         return null;
     }
 }

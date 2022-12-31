@@ -1,6 +1,8 @@
 package com.welambdas.lambda;
 
-public class Token {
+import java.io.Serializable;
+
+public class Token implements Serializable {
     final TokenType type;
     final String lexeme;
     final Object literal;

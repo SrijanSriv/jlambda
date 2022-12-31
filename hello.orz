@@ -1,0 +1,6 @@
+#>test
+
+print a;
+for (var itr = 0; itr < 5; itr = itr + 1) {
+    print itr;
+}

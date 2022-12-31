@@ -1,5 +1,13 @@
 package com.welambdas.lambda;
 
+/* imports to use saveLib and readLib
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+*/
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -52,9 +60,21 @@ public class Lambda {
       hadError = false;
     }
   }
-  private static void run(String source) {
+  private static void run(String source) throws IOException {
     Scanner scanner = new Scanner(source);
     List<Token> tokens = scanner.scanTokens();
+
+    // for (Token token : tokens) {
+    //   System.out.println(token);
+    // }
+
+    // saveLib("tokens\\test.sre", tokens);
+   
+    // to check the scanned tokens after getting it from a library
+    // List<Token> libknowledge = readLib("tokens\\test.sre");
+    // for (Token token : libknowledge) {
+    //   System.out.println(token);
+    // }
 
     Parser parser = new Parser(tokens);
     List<Stmt> statements = parser.parse();
@@ -89,4 +109,29 @@ public class Lambda {
       report(token.line, " at '" + token.lexeme + "'", message);
     }
   }
+
+  /* funtions to write tokens in a .sre file and read from .sre file
+  private static void saveLib(String fileName, List<Token> libtokens) throws IOException {
+    List<Token> send = new ArrayList<Token>(libtokens);
+    FileOutputStream fout= new FileOutputStream (fileName);
+    ObjectOutputStream oos = new ObjectOutputStream(fout);
+    oos.writeObject(send);
+    fout.close();
+  }
+
+  private static List<Token> readLib(String fileName) throws IOException {
+    List<Token> obtain = new ArrayList<Token>();
+    FileInputStream fin = new FileInputStream (fileName);
+    ObjectInputStream ois = new ObjectInputStream(fin);
+    try {
+      obtain = (ArrayList<Token>)ois.readObject();
+    } catch (ClassNotFoundException e) {
+      Lambda.error(null, "object not the form of token class.");
+    }
+    fin.close();
+    int lasttoken_index = obtain.size() - 1; // to remove the EOF
+    obtain.remove(lasttoken_index);
+    return obtain;
+  }
+  */
 }
