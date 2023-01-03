@@ -1,1 +1,9 @@
-var a = "completely works!";
+class Greeter {
+  init(name, time) {
+    this.name = name;
+    this.time = time;
+  }
+  greet() {
+    print "Good " + this.time + " " + this.name + "!";
+  }
+}

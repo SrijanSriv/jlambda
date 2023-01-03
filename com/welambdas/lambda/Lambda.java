@@ -1,13 +1,13 @@
 package com.welambdas.lambda;
 
-/* imports to use saveLib and readLib
+// imports to use saveLib and readLib
+/*
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 */
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -110,7 +110,8 @@ public class Lambda {
     }
   }
 
-  /* funtions to write tokens in a .sre file and read from .sre file
+  /*
+  // funtions to write tokens in a .sre file and read from .sre file
   private static void saveLib(String fileName, List<Token> libtokens) throws IOException {
     List<Token> send = new ArrayList<Token>(libtokens);
     FileOutputStream fout= new FileOutputStream (fileName);
@@ -118,7 +119,6 @@ public class Lambda {
     oos.writeObject(send);
     fout.close();
   }
-
   private static List<Token> readLib(String fileName) throws IOException {
     List<Token> obtain = new ArrayList<Token>();
     FileInputStream fin = new FileInputStream (fileName);
