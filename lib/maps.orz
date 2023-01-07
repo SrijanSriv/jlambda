@@ -1,0 +1,6 @@
+class Maps {
+    init (modulo_val) {
+        this.modulo_val = modulo_val;
+    }
+    insert(number)
+}

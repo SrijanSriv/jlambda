@@ -1,5 +1,5 @@
-#>test
+var arr = Array(3);
 
-var greeting = Greeter("srijan", "evening");
+arr.set(1, "word");
 
-greeting.greet();
+print arr.get(1);
