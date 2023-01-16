@@ -4,6 +4,12 @@ The origin of the Lambda Programming Language. Build using Java for experimentat
 
 ## The Language
 
+You can download the language from the releases section! Just head to the Releases section and download the `.jar`. You can run a file in the `.orz` extension in the same directory where the `.jar` is saved by the command:
+
+``` java
+java -jar .\lambda.jar main.orz
+```
+
 ### Examples
 
 #### Hello world
@@ -54,5 +60,19 @@ if (a >= 4) {
 ``` jlambda
 fun printSum(a, b) {
   print a + b;
+}
+```
+
+#### Classes
+
+``` jlambda
+class Greeter {
+  init(name, time) {
+    this.name = name;
+    this.time = time;
+  }
+  greet() {
+    print "Good " + this.time + " " + this.name + "!";
+  }
 }
 ```
